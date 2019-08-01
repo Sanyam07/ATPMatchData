@@ -15,3 +15,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
 db = SQLAlchemy(app)
 CORS(app)
 
+# --- Database Tables --- #
+
+class t1 (db.Model):
+    __tablename__ = "t1"
