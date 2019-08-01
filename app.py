@@ -17,9 +17,6 @@ CORS(app)
 
 # --- Database Tables --- #
 
-class t1 (db.Model):
-    __tablename__ = "t1"
-
 
 # --- Flask Restless API --- #
 
