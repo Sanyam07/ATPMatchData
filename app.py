@@ -19,3 +19,8 @@ CORS(app)
 
 class t1 (db.Model):
     __tablename__ = "t1"
+
+
+# --- Flask Restless API --- #
+
+manager = APIManager(app, flask_sqlalchemy_db=db)
