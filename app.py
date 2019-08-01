@@ -24,3 +24,9 @@ class t1 (db.Model):
 # --- Flask Restless API --- #
 
 manager = APIManager(app, flask_sqlalchemy_db=db)
+
+### --- Home Route --- ###
+@app.route('/')
+@app.route('/index')
+def index():
+    return "<h3>Endpoints:</h3>"
