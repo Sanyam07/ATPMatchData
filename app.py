@@ -7,7 +7,7 @@ import os
 
 # --- Database Connection Info --- #
 class Config (object):
-    SQLALCHEMY_DATABASE_URI = "postgresql://dbd:dbpassword@db370.chncgtkyhkgz.us-east-2.rds.amazonaws.com:5432/dbd"
+    SQLALCHEMY_DATABASE_URI = "postgresql://dbd:dbdpassword@dbd.chncgtkyhkgz.us-east-2.rds.amazonaws.com:5432/dbd"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app = Flask(__name__)
