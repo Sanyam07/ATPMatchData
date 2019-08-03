@@ -44,7 +44,7 @@ class Player (db.Model):
     backhand = db.Column(db.String(1))
     matches = db.relationship('Match', backref='player', lazy=True)
 
-class Round(db.Model):
+class Round (db.Model):
     __tablename__ = "round"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
     r_name = db.Column(db.String, unique=True, nullable=False)
@@ -66,6 +66,8 @@ class Match (db.Model):
     l_set4 = db.Column(db.Integer)
     w_set5 = db.Column(db.Integer)
     l_set5 = db.Column(db.Integer)
+    winner_rank = db.Column(db.Integer)
+    loser_rank = db.Column(db.Integer)
     winner = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
     loser = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
     t_round = db.Column(db.Integer, db.ForeignKey('round.id'))
