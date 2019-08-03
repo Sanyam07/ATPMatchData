@@ -43,6 +43,7 @@ class Match (db.Model):
     w_set5 = db.Column(db.Integer)
     l_set5 = db.Column(db.Integer)
     winner = db.Column(db.Integer, db.ForeignKey('player.id'))
+    loser = db.Column(db.Integer, db.ForeignKey('player.id'))
     tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
 
 # --- Flask Restless API --- #
