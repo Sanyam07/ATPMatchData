@@ -32,6 +32,11 @@ class Player (db.Model):
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
     matches = db.relationship('Match', backref='match_id')
 
+class Round(db.Model):
+    __tablename__ = "round"
+    id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
+    r_name = db.Column(db.String, unique=True)
+
 class Match (db.Model):
     __tablename__ = "match"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
