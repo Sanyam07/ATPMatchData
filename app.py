@@ -30,6 +30,18 @@ class Tournament (db.Model):
 class Player (db.Model):
     __tablename__ = "player"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
+    first = db.Column(db.String)
+    last = db.Column(db.String)
+    atp_url = db.Column(db.String)
+    country = db.Column(db.String(3))
+    date_of_birth = db.Column(db.Date)
+    turned_pro = db.Column(db.String)
+    weight_lbs = db.Column(db.Integer)
+    weight_kg = db.Column(db.Integer)
+    height_inches = db.Column(db.Integer)
+    height_cm = db.Column(db.Integer)
+    handedness = db.Column(db.String(1))
+    backhand = db.Column(db.String(1))
     matches = db.relationship('Match', backref='match_id')
 
 class Round(db.Model):
@@ -37,11 +49,12 @@ class Round(db.Model):
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
     r_name = db.Column(db.String, unique=True)
 
+
 class Match (db.Model):
     __tablename__ = "match"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
     m_date = db.Column(db.Date)
-    round = db.Column(db.String)
+    round = db.Column(db.Integer, db.ForeignKey('round.id'))
     w_set1 = db.Column(db.Integer)
     l_set1 = db.Column(db.Integer)
     w_set2 = db.Column(db.Integer)
