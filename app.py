@@ -21,17 +21,17 @@ CORS(app)
 class Tournament (db.Model):
     __tablename__ = "tournament"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
-    t_name = db.Column(db.String, unique=True)
+    t_name = db.Column(db.String, unique=True, nullable=False)
     location = db.Column(db.String)
     surface = db.Column(db.String)
     series = db.Column(db.String)
-    matches = db.relationship('Match', backref='match_id')
+    matches = db.relationship('Match', backref='tournament', lazy=True)
 
 class Player (db.Model):
     __tablename__ = "player"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
-    first = db.Column(db.String)
-    last = db.Column(db.String)
+    first = db.Column(db.String, nullable=False)
+    last = db.Column(db.String, nullable=False)
     atp_url = db.Column(db.String)
     country = db.Column(db.String(3))
     date_of_birth = db.Column(db.Date)
@@ -42,19 +42,20 @@ class Player (db.Model):
     height_cm = db.Column(db.Integer)
     handedness = db.Column(db.String(1))
     backhand = db.Column(db.String(1))
-    matches = db.relationship('Match', backref='match_id')
+    matches = db.relationship('Match', backref='player', lazy=True)
 
 class Round(db.Model):
     __tablename__ = "round"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
-    r_name = db.Column(db.String, unique=True)
+    r_name = db.Column(db.String, unique=True, nullable=False)
+    matches = db.relationship('Match', backref='round', lazy=True)
 
 
 class Match (db.Model):
     __tablename__ = "match"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
+    best_of = db.Column(db.Integer)
     m_date = db.Column(db.Date)
-    round = db.Column(db.Integer, db.ForeignKey('round.id'))
     w_set1 = db.Column(db.Integer)
     l_set1 = db.Column(db.Integer)
     w_set2 = db.Column(db.Integer)
@@ -65,8 +66,9 @@ class Match (db.Model):
     l_set4 = db.Column(db.Integer)
     w_set5 = db.Column(db.Integer)
     l_set5 = db.Column(db.Integer)
-    winner = db.Column(db.Integer, db.ForeignKey('player.id'))
-    loser = db.Column(db.Integer, db.ForeignKey('player.id'))
+    winner = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
+    loser = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
+    t_round = db.Column(db.Integer, db.ForeignKey('round.id'))
     tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
 
 # --- Flask Restless API --- #
