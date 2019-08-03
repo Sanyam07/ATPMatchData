@@ -32,6 +32,16 @@ class Match (db.Model):
     __tablename__ = "match"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
     m_date = db.Column(db.Date)
+    w_set1 = db.Column(db.Integer)
+    l_set1 = db.Column(db.Integer)
+    w_set2 = db.Column(db.Integer)
+    l_set2 = db.Column(db.Integer)
+    w_set3 = db.Column(db.Integer)
+    l_set3 = db.Column(db.Integer)
+    w_set4 = db.Column(db.Integer)
+    l_set4 = db.Column(db.Integer)
+    w_set5 = db.Column(db.Integer)
+    l_set5 = db.Column(db.Integer)
 
 # --- Flask Restless API --- #
 
