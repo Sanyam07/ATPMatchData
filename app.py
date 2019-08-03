@@ -25,11 +25,13 @@ class Tournament (db.Model):
     t_name = db.Column(db.String, unique=True)
     location = db.Column(db.String)
     surface = db.Column(db.String)
+    series = db.Column(db.String)
 
 # Match table
 class Match (db.Model):
     __tablename__ = "match"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
+    m_date = db.Column(db.Date)
 
 # --- Flask Restless API --- #
 
