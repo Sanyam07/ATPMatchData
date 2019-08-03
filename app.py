@@ -26,6 +26,7 @@ class Tournament (db.Model):
     location = db.Column(db.String)
     surface = db.Column(db.String)
     series = db.Column(db.String)
+    matches = db.relationship('Match', backref='match_id')
 
 # Match table
 class Match (db.Model):
