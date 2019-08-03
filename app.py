@@ -18,7 +18,6 @@ CORS(app)
 
 # --- Database Tables --- #
 
-# Tournament table
 class Tournament (db.Model):
     __tablename__ = "tournament"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
@@ -28,11 +27,16 @@ class Tournament (db.Model):
     series = db.Column(db.String)
     matches = db.relationship('Match', backref='match_id')
 
-# Match table
+class Player (db.Model):
+    __tablename__ = "player"
+    id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
+    matches = db.relationship('Match', backref='match_id')
+
 class Match (db.Model):
     __tablename__ = "match"
     id = db.Column(db.Integer, unique=True, autoincrement=True, primary_key=True)
     m_date = db.Column(db.Date)
+    round = db.Column(db.String)
     w_set1 = db.Column(db.Integer)
     l_set1 = db.Column(db.Integer)
     w_set2 = db.Column(db.Integer)
