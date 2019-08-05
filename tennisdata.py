@@ -29,41 +29,9 @@ def populate_player_table(players, session):
         id += 1
         
 
-def add_tournament(tournament_attributes, session) -> input:
-    result = None
-    try:
-        t = Tournament(**tournament_attributes)
-        session.add(t)
-        result = t['id']
-    except:
-        result = session.query(Tournament.id).filter(Tournament.t_name==tournament_attributes['t_name']).first()[0]
-    return result
-
-def add_round(round_attributes, session) -> int:
-    result = None
-    try:
-        r = Round(**round_attributes)
-        session.add(r)
-        result = r['id']
-    except:
-        result = session.query(Round.id).filter(Round.r_name==round_attributes['r_name']).first()[0]
-    return result
-
-def add_match(match_attributes, session):
-    m = Match(**match_attributes)
-    session.add(m)
-
-def get_player(last_firstinitial, session) -> int:
-    last_firstinitial = last_firstinitial.split()
-    last = last_firstinitial[0]
-    first = last_firstinitial[1][0:1]
-    result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
-    if (len(result) != 1):
-        print('Duplicate: %s. %s' % (first, last))
-        raise Exception
-    return result[0][0]
-
-def populate_tournament_round_match_tables(matches, session):
+def populate_tournament_round(matches, session):
+    tournaments_added = set()
+    rounds_added = set()
     for match in matches:
         tournament_attributes = {
             't_name': match['tournament'],
@@ -71,13 +39,45 @@ def populate_tournament_round_match_tables(matches, session):
             'surface': match['surface'],
             'series': match['series']
         }
-        tournament_id = add_tournament(tournament_attributes, session)
+        if not (tournament_attributes['t_name'] in tournaments_added):
+            t = Tournament(**tournament_attributes)
+            session.add(t)
+            tournaments_added.add(tournament_attributes['t_name'])
         round_attributes = {
             'r_name': match['round']
         }
-        round_id = add_round(round_attributes, session)
-        winner_id = get_player(match['winner'], session)
-        loser_id = get_player(match['loser'], session)
+        if not (round_attributes['r_name'] in rounds_added):
+            r = Round(**round_attributes)
+            session.add(r)
+            rounds_added.add(round_attributes['r_name'])
+
+def get_tournament(t_name, session) -> int:
+    return session.query(Tournament.id).filter(Tournament.t_name==t_name).first()[0]
+
+def get_round(r_name, session) -> int:
+    return session.query(Round.id).filter(Round.r_name==r_name).first()[0]
+
+def get_player(last_firstinitial, match, session) -> int:
+    last_firstinitial = last_firstinitial.split()
+    last = last_firstinitial[0]
+    first = last_firstinitial[1][0:1]
+    result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
+    if (len(result) != 1):
+        if last == 'Martin' and first == 'A' and match['match_date'].year < 2012:
+            pass
+        elif last == 'Martin' and first == 'A':
+            result[0] = result[1]
+        else:
+            print('Duplicate: %s. %s' % (first, last))
+            raise Exception
+    return result[0][0]
+
+def populate_match(matches, session):
+    for match in matches:
+        winner_id = get_player(match['winner'], match, session)
+        loser_id = get_player(match['loser'], match, session)
+        round_id = get_round(match['round'], session)
+        tournament = get_tournament(match['tournament'], session)
         match_attributes = {
             'm_date': match['match_date'],
             'best_of': match['best_of'],
@@ -96,17 +96,19 @@ def populate_tournament_round_match_tables(matches, session):
             'winner': winner_id,
             'loser': loser_id,
             't_round': round_id,
-            'tournament': tournament_id
+            'tournament': tournament
         }
-        add_match(match_attributes, session)
+        m = Match(**match_attributes)
+        session.add(m)
 
 
 if __name__ == '__main__':
     session = db.session()
     lds = dw.load_dataset('tylerudite/atp-match-data')
     matches = lds.tables['atp_matches_combined']
-    players = lds.tables['atp_players']
+    # players = lds.tables['atp_players']
+    # populate_tournament_round(matches, session)
     # populate_player_table(players, session)
-    populate_tournament_round_match_tables(matches, session)
+    populate_match(matches, session)
     session.commit()
     session.close()
