@@ -32,21 +32,26 @@ def populate_player_table(players, session):
 def add_tournament(tournament_attributes, session) -> input:
     result = None
     try:
-        pass
+        t = Tournament(**tournament_attributes)
+        session.add(t)
+        result = t['id']
     except:
-        pass
+        result = session.query(Tournament.id).filter(Tournament.t_name==tournament_attributes['t_name']).first()[0]
     return result
 
 def add_round(round_attributes, session) -> int:
     result = None
     try:
-        pass
+        r = Round(**round_attributes)
+        session.add(r)
+        result = r['id']
     except:
-        pass
+        result = session.query(Round.id).filter(Round.r_name==round_attributes['r_name']).first()[0]
     return result
 
 def add_match(match_attributes, session):
-    pass
+    m = Match(**match_attributes)
+    session.add(m)
 
 def get_player(last_firstinitial, session) -> int:
     last_firstinitial = last_firstinitial.split()
@@ -54,8 +59,9 @@ def get_player(last_firstinitial, session) -> int:
     first = last_firstinitial[1][0:1]
     result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
     if (len(result) != 1):
+        print('Duplicate: %s. %s' % (first, last))
         raise Exception
-    return result[0]
+    return result[0][0]
 
 def populate_tournament_round_match_tables(matches, session):
     for match in matches:
