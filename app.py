@@ -42,7 +42,8 @@ class Player (db.Model):
     height_cm = db.Column(db.Integer)
     handedness = db.Column(db.String(1))
     backhand = db.Column(db.String(1))
-    matches = db.relationship('Match', backref='player_id', lazy=True)
+    wins = db.relationship('Match', backref='winners_id', foreign_keys='Match.winner', lazy=True)
+    losses = db.relationship('Match', backref='losers_id', foreign_keys='Match.loser', lazy=True)
 
 class Round (db.Model):
     __tablename__ = "round"
@@ -72,8 +73,8 @@ class Match (db.Model):
     loser = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
     t_round = db.Column(db.Integer, db.ForeignKey('round.id'))
     tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
-    w = db.relationship('Player', foreign_keys='Match.winner')
-    l = db.relationship('Player', foreign_keys='Match.loser')
+    # w = db.relationship('Player', foreign_keys='Match.winner')
+    # l = db.relationship('Player', foreign_keys='Match.loser')
 
 # --- Flask Restless API --- #
 
@@ -84,3 +85,6 @@ manager = APIManager(app, flask_sqlalchemy_db=db)
 @app.route('/index')
 def index():
     return "<h3>Endpoints:</h3>"
+
+### --- Players --- ###
+manager.create_api(Player, url_prefix='', methods=['GET'], collection_name='players', results_per_page=100, max_results_per_page=200)

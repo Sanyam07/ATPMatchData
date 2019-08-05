@@ -15,10 +15,17 @@ def populate_player_table(players, session):
             'weight_lbs': player['weight_lbs'],
             'weight_kg': player['weight_kg'],
             'height_inches': player['height_inches'],
-            'height_cm': player['height_cm'],
-            'handedness': player['handedness'],
-            'backhand': player['backhand']
+            'height_cm': player['height_cm']
         }
+        try:
+            attributes['handedness'] = player['handedness'][0:1]
+        except:
+            attributes['handedness'] = None
+        try:
+            attributes['backhand'] = player['backhand'][0:1]
+        except:
+            attributes['backhand'] = None
+
         session.add(Player(**attributes))
         id += 1
         
@@ -47,7 +54,7 @@ if __name__ == '__main__':
     lds = dw.load_dataset('tylerudite/atp-match-data')
     matches = lds.tables['atp_matches_combined']
     players = lds.tables['atp_players']
-    populate_player_table(players, session)
+    # populate_player_table(players, session)
     populate_tournament_round_match_tables(matches, session)
     session.commit()
     session.close()
