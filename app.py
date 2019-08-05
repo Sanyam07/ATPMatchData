@@ -87,4 +87,4 @@ def index():
     return "<h3>Endpoints:</h3>"
 
 ### --- Players --- ###
-manager.create_api(Player, url_prefix='', methods=['GET'], collection_name='players', results_per_page=100, max_results_per_page=200)
+manager.create_api(Player, url_prefix='', methods=['GET'], collection_name='players', results_per_page=50, max_results_per_page=200)
