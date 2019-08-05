@@ -1,11 +1,25 @@
 import datadotworld as dw
-from app import db
-import pandas as pd
+from app import db, Tournament, Player, Round, Match
 
-def populate_player_table(pandas_players):
-    pandas_players['first_name'] = pd.to_string
-    pandas_players['birth_date'] = pd.to_datetime(pandas_players['birth_date'], yearfirst=True).date()
-    print(pandas_players.info())
+def populate_player_table(players, session):
+    id = 0
+    for player in players:
+        attributes = (id,
+            player['first_name'],
+            player['last_name'],
+            player['player_url'],
+            player['flag_code'],
+            player['birth_date'],
+            player['turned_pro'],
+            player['weight_lbs'],
+            player['weight_kg'],
+            player['height_inches'],
+            player['height_cm'],
+            player['handedness'],
+            player['backhand'])
+        session.add(Player(*attributes))
+        id += 1
+        
 
 def add_tournament():
     pass
@@ -16,18 +30,15 @@ def add_round():
 def add_match():
     pass
 
-def populate_tournament_round_match_tables(pandas_matches):
+def populate_tournament_round_match_tables(matches, session):
     pass
 
 if __name__ == '__main__':
-    #session = db.session()
+    session = db.session()
     lds = dw.load_dataset('tylerudite/atp-match-data')
-    pandas_matches = lds.dataframes['atp_matches_combined']
-    pandas_players = lds.dataframes['atp_players']
-    #
-    print(pandas_matches.info())
-    #
-    populate_player_table(pandas_players)
-    populate_tournament_round_match_tables(pandas_matches)
-    #session.commit()
-    #session.close()
+    matches = lds.tables['atp_matches_combined']
+    players = lds.tables['atp_players']
+    populate_player_table(players, session)
+    populate_tournament_round_match_tables(matches, session)
+    session.commit()
+    session.close()
