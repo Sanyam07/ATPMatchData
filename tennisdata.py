@@ -5,7 +5,6 @@ def populate_player_table(players, session):
     id = 0
     for player in players:
         attributes = {
-            'id': id,
             'first': player['first_name'],
             'last': player['last_name'],
             'atp_url': player['player_url'],
@@ -30,23 +29,58 @@ def populate_player_table(players, session):
         id += 1
         
 
-def add_tournament():
+def add_tournament(tournament_attributes, session) -> input:
+    result = None
     try:
         pass
     except:
         pass
+    return result
 
-def add_round():
+def add_round(round_attributes, session) -> int:
+    result = None
     try:
         pass
     except:
         pass
+    return result
 
 def add_match():
     pass
 
 def populate_tournament_round_match_tables(matches, session):
-    pass
+    for match in matches:
+        tournament_attributes = {
+            't_name': match['tournament'],
+            'location': match['location'],
+            'surface': match['surface'],
+            'series': match['series']
+        }
+        tournament_id = add_tournament(tournament_attributes, session)
+        round_attributes = {
+            'r_name': match['round']
+        }
+        round_id = add_round(round_attributes, session)
+        match_attributes = {
+            'm_date': match['match_date'],
+            'best_of': match['best_of'],
+            'w_set1': match['w1'],
+            'l_set1': match['l1'],
+            'w_set2': match['w2'],
+            'l_set2': match['l2'],
+            'w_set3': match['w3'],
+            'l_set3': match['l3'],
+            'w_set4': match['w4'],
+            'l_set4': match['l4'],
+            'w_set5': match['w5'],
+            'l_set5': match['l5'],
+            'winner_rank': match['wrank'],
+            'loser_rank': match['lrank'],
+            'winner': winner_id,
+            'loser': loser_id,
+            't_round': round_id,
+            'tournament': tournament_id
+        }
 
 
 if __name__ == '__main__':
