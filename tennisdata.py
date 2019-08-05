@@ -4,34 +4,43 @@ from app import db, Tournament, Player, Round, Match
 def populate_player_table(players, session):
     id = 0
     for player in players:
-        attributes = (id,
-            player['first_name'],
-            player['last_name'],
-            player['player_url'],
-            player['flag_code'],
-            player['birth_date'],
-            player['turned_pro'],
-            player['weight_lbs'],
-            player['weight_kg'],
-            player['height_inches'],
-            player['height_cm'],
-            player['handedness'],
-            player['backhand'])
-        session.add(Player(*attributes))
+        attributes = {
+            'id': id,
+            'first': player['first_name'],
+            'last': player['last_name'],
+            'atp_url': player['player_url'],
+            'country': player['flag_code'],
+            'date_of_birth': player['birth_date'],
+            'turned_pro': player['turned_pro'],
+            'weight_lbs': player['weight_lbs'],
+            'weight_kg': player['weight_kg'],
+            'height_inches': player['height_inches'],
+            'height_cm': player['height_cm'],
+            'handedness': player['handedness'],
+            'backhand': player['backhand']
+        }
+        session.add(Player(**attributes))
         id += 1
         
 
 def add_tournament():
-    pass
+    try:
+        pass
+    except:
+        pass
 
 def add_round():
-    pass
+    try:
+        pass
+    except:
+        pass
 
 def add_match():
     pass
 
 def populate_tournament_round_match_tables(matches, session):
     pass
+
 
 if __name__ == '__main__':
     session = db.session()
