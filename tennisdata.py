@@ -49,10 +49,13 @@ def add_match(match_attributes, session):
     pass
 
 def get_player(last_firstinitial, session) -> int:
-    last_firstinitial = first_lastinitial.split()
-    last = first_lastinitial[0]
-    first = first_lastinitial[1][0:1]
-    session.query(Player.id).filter_by('')
+    last_firstinitial = last_firstinitial.split()
+    last = last_firstinitial[0]
+    first = last_firstinitial[1][0:1]
+    result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
+    if (len(result) != 1):
+        raise Exception
+    return result[0]
 
 def populate_tournament_round_match_tables(matches, session):
     for match in matches:
