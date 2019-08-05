@@ -45,8 +45,14 @@ def add_round(round_attributes, session) -> int:
         pass
     return result
 
-def add_match():
+def add_match(match_attributes, session):
     pass
+
+def get_player(last_firstinitial, session) -> int:
+    last_firstinitial = first_lastinitial.split()
+    last = first_lastinitial[0]
+    first = first_lastinitial[1][0:1]
+    session.query(Player.id).filter_by('')
 
 def populate_tournament_round_match_tables(matches, session):
     for match in matches:
@@ -61,6 +67,8 @@ def populate_tournament_round_match_tables(matches, session):
             'r_name': match['round']
         }
         round_id = add_round(round_attributes, session)
+        winner_id = get_player(match['winner'], session)
+        loser_id = get_player(match['loser'], session)
         match_attributes = {
             'm_date': match['match_date'],
             'best_of': match['best_of'],
@@ -81,6 +89,7 @@ def populate_tournament_round_match_tables(matches, session):
             't_round': round_id,
             'tournament': tournament_id
         }
+        add_match(match_attributes, session)
 
 
 if __name__ == '__main__':

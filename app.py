@@ -73,8 +73,6 @@ class Match (db.Model):
     loser = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
     t_round = db.Column(db.Integer, db.ForeignKey('round.id'))
     tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
-    # w = db.relationship('Player', foreign_keys='Match.winner')
-    # l = db.relationship('Player', foreign_keys='Match.loser')
 
 # --- Flask Restless API --- #
 
