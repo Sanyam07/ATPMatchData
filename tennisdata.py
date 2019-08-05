@@ -51,37 +51,38 @@ def populate_tournament_round(matches, session):
             session.add(r)
             rounds_added.add(round_attributes['r_name'])
 
-def get_tournament(t_name, session) -> int:
-    return session.query(Tournament.id).filter(Tournament.t_name==t_name).first()[0]
-
-def get_round(r_name, session) -> int:
-    return session.query(Round.id).filter(Round.r_name==r_name).first()[0]
+def get_tournament(t_name, ids, session) -> int:
+    if t_name not in ids:
+        ids[t_name] = session.query(Tournament.id).filter(Tournament.t_name==t_name).first()[0]
+    return ids[t_name]
+def get_round(r_name, ids, session) -> int:
+    if r_name not in ids:
+        ids[r_name] = session.query(Round.id).filter(Round.r_name==r_name).first()[0]
+    return ids[r_name]
 
 def get_player(last_firstinitial, player_ids, match, session) -> int:
-    if last_firstinitial in player_ids:
-        return player_ids[last_firstinitial]
-    else:
-        last_firstinitial = last_firstinitial.split()
-        last = last_firstinitial[0]
-        first = last_firstinitial[1][0:1]
+    if last_firstinitial not in player_ids:
+        last_firstinitial_list = last_firstinitial.split()
+        last = last_firstinitial_list[0]
+        first = last_firstinitial_list[1][0:1]
         result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
         if (len(result) != 1):
                 print(last_firstinitial)
                 return None
-        
-        return result[0][0]
+        player_ids[last_firstinitial] = result[0][0]
+    return player_ids[last_firstinitial]
 
 def populate_match(matches, session):
     for match in matches:
         player_ids = dict()
-        winner_id = get_player(match['winner'], match, session)
-        loser_id = get_player(match['loser'], match, session)
+        winner_id = get_player(match['winner'], player_ids, match, session)
+        loser_id = get_player(match['loser'], player_ids, match, session)
         if not (winner_id and loser_id):
             continue
         round_ids = dict()
-        round_id = get_round(match['round'], session)
+        round_id = get_round(match['round'], round_ids, session)
         tournament_ids = dict()
-        tournament = get_tournament(match['tournament'], session)
+        tournament = get_tournament(match['tournament'], tournament_ids, session)
         match_attributes = {
             'm_date': match['match_date'],
             'best_of': match['best_of'],
