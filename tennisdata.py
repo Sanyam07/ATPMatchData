@@ -57,26 +57,30 @@ def get_tournament(t_name, session) -> int:
 def get_round(r_name, session) -> int:
     return session.query(Round.id).filter(Round.r_name==r_name).first()[0]
 
-def get_player(last_firstinitial, match, session) -> int:
-    last_firstinitial = last_firstinitial.split()
-    last = last_firstinitial[0]
-    first = last_firstinitial[1][0:1]
-    result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
-    if (len(result) != 1):
-        if last == 'Martin' and first == 'A' and match['match_date'].year < 2012:
-            pass
-        elif last == 'Martin' and first == 'A':
-            result[0] = result[1]
-        else:
-            print('Duplicate: %s. %s' % (first, last))
-            raise Exception
-    return result[0][0]
+def get_player(last_firstinitial, player_ids, match, session) -> int:
+    if last_firstinitial in player_ids:
+        return player_ids[last_firstinitial]
+    else:
+        last_firstinitial = last_firstinitial.split()
+        last = last_firstinitial[0]
+        first = last_firstinitial[1][0:1]
+        result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
+        if (len(result) != 1):
+                print(last_firstinitial)
+                return None
+        
+        return result[0][0]
 
 def populate_match(matches, session):
     for match in matches:
+        player_ids = dict()
         winner_id = get_player(match['winner'], match, session)
         loser_id = get_player(match['loser'], match, session)
+        if not (winner_id and loser_id):
+            continue
+        round_ids = dict()
         round_id = get_round(match['round'], session)
+        tournament_ids = dict()
         tournament = get_tournament(match['tournament'], session)
         match_attributes = {
             'm_date': match['match_date'],
