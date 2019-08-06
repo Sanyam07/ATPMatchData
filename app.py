@@ -92,3 +92,12 @@ manager.create_api(Match, url_prefix='', methods=['GET'], collection_name='match
 
 ### --- Tournaments --- ###
 manager.create_api(Tournament, url_prefix='', methods=['GET'], collection_name='tournaments', results_per_page=10, max_results_per_page=100)
+
+
+
+
+
+### --- Entry Point --- ###
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", threaded='True')
