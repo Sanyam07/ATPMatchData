@@ -82,7 +82,7 @@ manager = APIManager(app, flask_sqlalchemy_db=db)
 @app.route('/')
 @app.route('/index')
 def index():
-    return "<h3>Endpoints:</h3><p>/players</p"
+    return "<h3>Endpoints:</h3><p>/players<br/>/players/id<br/><br/>/matches<br/>/matches/id<br/><br/>/tournaments<br/>/tournaments/id</p>"
 
 ### --- Players --- ###
 manager.create_api(Player, url_prefix='', methods=['GET'], collection_name='players', results_per_page=10, max_results_per_page=100)
