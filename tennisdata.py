@@ -77,7 +77,9 @@ def populate_match(matches, session):
     player_ids = dict()
     round_ids = dict()
     tournament_ids = dict()
+    count = 0
     for match in matches:
+        count += 1
         winner_id = get_player(match['winner'], player_ids, match, session)
         loser_id = get_player(match['loser'], player_ids, match, session)
         if not (winner_id and loser_id):
@@ -106,6 +108,9 @@ def populate_match(matches, session):
         }
         m = Match(**match_attributes)
         session.add(m)
+        if not count % 5000:
+            session.commit()
+            print(count)
 
 
 if __name__ == '__main__':
