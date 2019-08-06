@@ -1,5 +1,6 @@
 import datadotworld as dw
 from app import db, Tournament, Player, Round, Match
+import random
 
 def populate_player_table(players, session):
     id = 0
@@ -63,25 +64,25 @@ def get_round(r_name, ids, session) -> int:
 def get_player(last_firstinitial, player_ids, match, session) -> int:
     if last_firstinitial not in player_ids:
         last_firstinitial_list = last_firstinitial.split()
-        last = last_firstinitial_list[0]
+        last = last_firstinitial_list[0].title()
         first = last_firstinitial_list[1][0:1]
         result = session.query(Player.id).filter(Player.last==last, Player.first.startswith(first)).all()
-        if (len(result) != 1):
-                print(last_firstinitial)
-                return None
+        if len(result) == 0:
+            player_ids[last_firstinitial] = None
+            return None
         player_ids[last_firstinitial] = result[0][0]
     return player_ids[last_firstinitial]
 
 def populate_match(matches, session):
+    player_ids = dict()
+    round_ids = dict()
+    tournament_ids = dict()
     for match in matches:
-        player_ids = dict()
         winner_id = get_player(match['winner'], player_ids, match, session)
         loser_id = get_player(match['loser'], player_ids, match, session)
         if not (winner_id and loser_id):
             continue
-        round_ids = dict()
         round_id = get_round(match['round'], round_ids, session)
-        tournament_ids = dict()
         tournament = get_tournament(match['tournament'], tournament_ids, session)
         match_attributes = {
             'm_date': match['match_date'],
