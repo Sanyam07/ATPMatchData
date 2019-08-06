@@ -78,11 +78,17 @@ class Match (db.Model):
 
 manager = APIManager(app, flask_sqlalchemy_db=db)
 
-# Home route
+### --- Home --- ###
 @app.route('/')
 @app.route('/index')
 def index():
     return "<h3>Endpoints:</h3><p>/players</p"
 
 ### --- Players --- ###
-manager.create_api(Player, url_prefix='', methods=['GET'], collection_name='players', results_per_page=50, max_results_per_page=200)
+manager.create_api(Player, url_prefix='', methods=['GET'], collection_name='players', results_per_page=10, max_results_per_page=100)
+
+### --- Matches --- ###
+manager.create_api(Match, url_prefix='', methods=['GET'], collection_name='matches', results_per_page=10, max_results_per_page=100)
+
+### --- Tournaments --- ###
+manager.create_api(Tournament, url_prefix='', methods=['GET'], collection_name='tournaments', results_per_page=10, max_results_per_page=100)
